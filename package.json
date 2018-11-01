@@ -1,0 +1,33 @@
+{
+  "name": "mthread",
+  "description": "A simple Multithread with Web Worker based on Events",
+  "version": "1.0.0",
+  "main": "src/main.js",
+  "scripts": {
+    "test": "xo",
+    "build": "rm -rf dist/*.* && concurrently 'yarn build:iife' 'yarn build:iife-min'",
+    "build:iife": "rollup -c build-config-base.js",
+    "build:iife-min": "rollup -c build-config-min.js"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@ampproject/rollup-plugin-closure-compiler": "^0.8.2",
+    "@babel/core": "^7.1.2",
+    "@babel/preset-env": "^7.1.0",
+    "@babel/register": "^7.0.0",
+    "concurrently": "^4.0.1",
+    "rollup": "^0.66.6",
+    "rollup-plugin-babel": "^4.0.3",
+    "rollup-plugin-commonjs": "^9.2.0",
+    "rollup-plugin-node-resolve": "^3.4.0",
+    "rollup-plugin-terser": "^3.0.0",
+    "xo": "^0.18.2"
+  },
+  "browserslist": "> 0.25%, not dead",
+  "xo": {
+    "esnext": true,
+    "space": true,
+    "semicolon": false
+  },
+  "dependencies": {}
+}
