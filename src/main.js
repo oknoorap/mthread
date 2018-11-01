@@ -1,7 +1,8 @@
+/* global self, Worker */
 export default class MultiThread {
   constructor(fileNameOrBool) {
     if (typeof fileNameOrBool === 'undefined') {
-      throw new Error('Filename should be path of file or a Boolean.')
+      throw new TypeError('Filename should be path of file or a Boolean.')
     }
 
     this.events = []
@@ -40,9 +41,13 @@ export default class MultiThread {
       })
     }
 
-    this.pause = () => {}
+    this.pause = () => {
+      this.send('$$pause')
+    }
 
-    this.resume = () => {}
+    this.resume = () => {
+      this.send('$$resume')
+    }
 
     this.kill = () => {
       if (typeof this.worker.terminate !== 'undefined') {
@@ -57,20 +62,22 @@ export default class MultiThread {
       }
 
       const execute = this.events.find(item => item.eventName === event.data.eventName)
-      if (execute) {
+      if (execute && !this.stop) {
         execute.fn.call(this, event.data.data || undefined)
       }
     })
 
-    // Handle pause event-based.
-    this.on('$$pause', () => {
-      this.stop = true
-    })
+    if ('MultiThread' in this.worker) {
+      // Handle pause event-based.
+      this.on('$$pause', () => {
+        this.stop = true
+      })
 
-    // Handle resume event-based.
-    this.on('$$resume', () => {
-      this.stop = false
-    })
+      // Handle resume event-based.
+      this.on('$$resume', () => {
+        this.stop = false
+      })
+    }
 
     return this
   }

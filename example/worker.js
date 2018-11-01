@@ -1,10 +1,22 @@
-importScripts('../main.js')
+// importScripts('https://unpkg.com/mthread/dist/mthread.min.js')
+importScripts('../dist/mthread.min.js')
 
-const th1 = new MultiThread(true)
+const thread = new MultiThread(true)
+console.log(thread.events)
 
-th1.on('ping', data => {
+// thread.on('ping', () => {
+//   console.log('got ping from main thread')
+//   console.log('send pong to main thread')
+
+//   // Send data to main thread
+//   thread.send('pong', {
+//     fromWorker: true
+//   })
+// })
+
+thread.on('ping', () => {
+  const random = Math.random() * 10000
   setTimeout(() => {
-    console.log('from main thread:', data)
-    th1.send('pong', 'data')
-  }, Math.round(Math.random(0, 100) * 100000))
+    console.log('run task', random)
+  }, Math.round(random))
 })
