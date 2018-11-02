@@ -1,15 +1,23 @@
 /* global self, Worker */
+const threadTypes = {
+  SUB: 'sub',
+  MAIN: 'main'
+}
+
 export default class MultiThread {
   constructor(fileNameOrBool) {
     if (typeof fileNameOrBool === 'undefined') {
-      throw new TypeError('Filename should be path of file or a Boolean.')
+      throw new TypeError('Filename should be path of file or a Boolean.', 'src/main.js')
     }
 
+    this.thread = undefined
+    this.type = threadTypes.MAIN
     this.events = []
-    this.stop = false
+    this.queues = []
     this.fileName = fileNameOrBool
 
     if (typeof fileNameOrBool === 'boolean' && fileNameOrBool) {
+      this.type = threadTypes.SUB
       return this.worker()
     }
 
@@ -17,67 +25,54 @@ export default class MultiThread {
   }
 
   worker() {
-    this.worker = self
-    return this.engine()
+    if (this.type === threadTypes.SUB) {
+      this.thread = self
+      return this.engine()
+    }
   }
 
   sender() {
-    this.worker = new Worker(this.fileName)
-    return this.engine()
+    if (this.type === threadTypes.MAIN) {
+      this.thread = new Worker(this.fileName)
+      return this.engine()
+    }
+  }
+
+  send(eventName, data) {
+    if (!this.thread) {
+      return
+    }
+
+    this.thread.postMessage({
+      eventName,
+      data
+    })
+  }
+
+  on(eventName, fn) {
+    this.events.push({
+      eventName,
+      fn
+    })
+  }
+
+  kill() {
+    if (this.thread && typeof this.thread.terminate !== 'undefined') {
+      this.thread.terminate()
+    }
   }
 
   engine() {
-    this.send = (eventName, data) => {
-      this.worker.postMessage({
-        eventName,
-        data
-      })
-    }
-
-    this.on = (eventName, fn) => {
-      this.events.push({
-        eventName,
-        fn
-      })
-    }
-
-    this.pause = () => {
-      this.send('$$pause')
-    }
-
-    this.resume = () => {
-      this.send('$$resume')
-    }
-
-    this.kill = () => {
-      if (typeof this.worker.terminate !== 'undefined') {
-        this.stop = false
-        this.worker.terminate()
-      }
-    }
-
-    this.worker.addEventListener('message', event => {
+    this.thread.addEventListener('message', event => {
       if (typeof event.data !== 'object' && !event.data.eventName) {
         return
       }
 
       const execute = this.events.find(item => item.eventName === event.data.eventName)
-      if (execute && !this.stop) {
+      if (execute) {
         execute.fn.call(this, event.data.data || undefined)
       }
     })
-
-    if ('MultiThread' in this.worker) {
-      // Handle pause event-based.
-      this.on('$$pause', () => {
-        this.stop = true
-      })
-
-      // Handle resume event-based.
-      this.on('$$resume', () => {
-        this.stop = false
-      })
-    }
 
     return this
   }

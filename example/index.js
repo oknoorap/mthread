@@ -1,11 +1,20 @@
 const thread = new MultiThread('./worker.js')
+const userList = document.querySelector('#users-list')
 
-// thread.on('pong', data => {
-//   console.log('got pong from worker, with data:', data)
-// })
+// Got users info from worker.
+thread.on('user-info', ({ username, followers }) => {
+  const item = document.createElement('li')
+  item.innerHTML = `${username} got ${followers} followers`
+  userList.appendChild(item)
+})
 
-// thread.send('ping')
+// Got trending list from worker.
+thread.on('trending-list', list => {
+  // Request user info to worker
+  list.forEach(username => {
+    thread.send('get-info', username)
+  })
+})
 
-for (let i = 0; i < 100; i++) {
-  thread.send('ping')
-}
+// Request trending developers.
+thread.send('get-trending')

@@ -1,0 +1,12 @@
+.babelrc
+.editorconfig
+.eslintignore
+.eslintrc
+.travis.yml
+appveyor.yml
+build-config-base.js
+build-config-min.js
+.vscode/
+.cache/
+example/
+src/

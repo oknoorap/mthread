@@ -2,13 +2,14 @@
   "name": "mthread",
   "description": "A simple Multithread with Web Worker based on Events",
   "version": "1.0.0",
-  "main": "src/main.js",
+  "main": "dist/mthread.cjs.js",
   "scripts": {
     "test": "xo",
     "dev": "http-server -p 3333",
-    "build": "rm -rf dist/*.* && concurrently 'yarn build:iife' 'yarn build:iife-min'",
+    "build": "rm -rf dist/*.* && concurrently 'yarn build:iife' 'yarn build:iife-min' 'yarn build:cjs'",
     "build:iife": "rollup -c build-config-base.js",
-    "build:iife-min": "rollup -c build-config-min.js"
+    "build:iife-min": "rollup -c build-config-min.js",
+    "build:cjs": "rollup -c build-config-cjs.js"
   },
   "license": "MIT",
   "devDependencies": {
