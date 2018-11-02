@@ -6,6 +6,7 @@
 appveyor.yml
 build-config-base.js
 build-config-min.js
+build-config-cjs.js
 .vscode/
 .cache/
 example/
