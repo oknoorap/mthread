@@ -18,7 +18,7 @@ yarn add mthread
 <script defer type="module">
   const thread = new MultiThread('./worker.js')
 
-  thread.on('pong', number) => {
+  thread.on('pong', number => {
     console.log(`got reply from worker, x + y = ${number}`)
   })
   
