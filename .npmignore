@@ -11,3 +11,6 @@ build-config-cjs.js
 .cache/
 example/
 src/
+README.md
+*.lock
+!dist/
