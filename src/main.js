@@ -56,11 +56,15 @@ export default class MultiThread {
     })
   }
 
-  off(eventName) {
+  off(eventName, fn) {
     const eventIndex = this.events.findIndex(item => item.eventName === eventName)
 
     if (eventIndex > -1) {
       this.events.splice(eventIndex, 1)
+    }
+
+    if (typeof fn === 'function') {
+      fn.call(this)
     }
   }
 
