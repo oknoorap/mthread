@@ -56,9 +56,18 @@ export default class MultiThread {
     })
   }
 
+  off(eventName) {
+    const eventIndex = this.events.findIndex(item => item.eventName === eventName)
+
+    if (eventIndex > -1) {
+      this.events.splice(eventIndex, 1)
+    }
+  }
+
   kill() {
     if (this.thread && typeof this.thread.terminate !== 'undefined') {
       this.thread.terminate()
+      this.events = []
     }
   }
 
