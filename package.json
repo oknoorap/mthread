@@ -1,7 +1,7 @@
 {
   "name": "mthread",
   "description": "A simple Multithread with Web Worker based on Events",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "main": "dist/mthread.cjs.js",
   "scripts": {
     "test": "xo",
