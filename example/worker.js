@@ -1,4 +1,4 @@
-importScripts('https://unpkg.com/mthread/dist/mthread.min.js')
+importScripts('../dist/mthread.min.js')
 
 const thread = new MultiThread(true)
 
